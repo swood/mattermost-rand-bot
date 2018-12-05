@@ -39,5 +39,11 @@ def get_username_by_id(user_id):
     return username
 
 def get_random_number(one, two):
-    return random.randint(one, two)
+    if one > two:
+	f = two
+	t = one
+    else:
+        f = one
+	t = two
+    return random.randint(f, t)
 
