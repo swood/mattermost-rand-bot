@@ -35,10 +35,14 @@ class Rand(tornado.web.RequestHandler):
             req = requests.post("%s" % response_url, data = json.dumps(response), headers = headers)
         else:
             print "random number"
-            f  = int(u"%s" % text.split("+")[0])
-            to = int(u"%s" % text.split("+")[1])
-            number = mattermost_bridge.get_random_number(f, to)
-            response['text'] = "The boy has chosen %d" % number
+            try:
+                if len(text.spit("+")) == 2:
+                    f  = int(u"%s" % text.split("+")[0])
+                    to = int(u"%s" % text.split("+")[1])
+                    number = mattermost_bridge.get_random_number(f, to)
+                    response['text'] = "The boy has chosen %d" % number
+            except:
+                response['text'] = "The boy hasn't chosen anything, please send correct request"
             req = requests.post("%s" % response_url, data=json.dumps(response), headers=headers)
         print req.text
 
