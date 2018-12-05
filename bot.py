@@ -7,6 +7,7 @@ import datetime
 import urllib
 import mattermost_bridge
 import requests
+from unidecode import unidecode
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -36,14 +37,16 @@ class Rand(tornado.web.RequestHandler):
         else:
             print "random number"
             try:
-                if len(text.spit("+")) == 2:
-                    f  = int(u"%s" % text.split("+")[0])
-                    to = int(u"%s" % text.split("+")[1])
+                text_obj = unidecode(text)
+                l = len(text_obj.split("+"))
+                if l == 2:
+                    f = int("%s" % text_obj.split("+")[0])
+                    to = int("%s" % text_obj.split("+")[1])
                     number = mattermost_bridge.get_random_number(f, to)
                     response['text'] = "The boy has chosen %d" % number
             except:
                 response['text'] = "The boy hasn't chosen anything, please send correct request"
-            req = requests.post("%s" % response_url, data=json.dumps(response), headers=headers)
+        req = requests.post("%s" % response_url, data=json.dumps(response), headers=headers)
         print req.text
 
 def make_app():
